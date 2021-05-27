@@ -1,0 +1,29 @@
+.cards-list_item {
+  color: #ff5100;
+  font-size: 20px;
+}
+.card__content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+p {
+  color: rgb(10, 10, 10);
+  font-size: 20px;
+  font-weight: bold;
+}
+.card__text {
+  color: rgb(83, 64, 100);
+  font-weight: bold;
+  font-size: 20px;
+}
+.tag-list__item {
+  font-weight: bold;
+  color: rgb(85, 83, 83);
+}
+.card__img {
+  display: block;
+}
+.card__information {
+  margin-right: 50px;
+}
