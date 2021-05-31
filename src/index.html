@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Заголовок страницы</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   </head>
   <body>
-    <input class="input" type="text"/ placeholder="Enter your country">
-    <div class="country-cards"></div>
+    <form class="search-form" id="search-form">
+      <input type="text" name="query" autocomplete="off" placeholder="Search images..." />
+      <button class="button" type="submit">Load more</button>
+    </form>
+    <ul class="gallery"></ul>
+    <div id="my-element-selector" class="my-element-selector"></div>
+      
 
     <!-- Скрипт идёт последним в разметке. В нём уже подключен главный SASS-файл. -->
     <script src="./index.js"></script>

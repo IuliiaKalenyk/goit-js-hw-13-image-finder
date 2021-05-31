@@ -1,6 +1,7 @@
 export default function getRefs() {
     return {
-        input: document.querySelector('.input'),
-        cards: document.querySelector('.country-cards'),
+        searchForm: document.querySelector('.search-form'),
+        gallery: document.querySelector('.gallery'),
+        myElementSelector: document.querySelector('.my-element-selector'),
     };
-}
+    }

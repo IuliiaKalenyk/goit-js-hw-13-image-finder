@@ -1,59 +1,59 @@
 import css from './css/styles.css';
 import cardsName from './templates/cards.hbs';
-import cardsList from './templates/cardsList.hbs'
-import debounce from 'lodash.debounce';
-import API from './js/api-service';
+import NewsApiService from './js/apiService';
 import getRefs from './js/get-refs';
-import '@pnotify/core/dist/BrightTheme.css';
+/* import '@pnotify/core/dist/BrightTheme.css';
 import '@pnotify/core/dist/PNotify.css';
-import { error } from '@pnotify/core';
+import { error } from '@pnotify/core'; */
+/* import './js/if'; */
+/* import handleButtonClick from './js/if.js'; */
+/* import './js/io'; */
+
 
 const refs = getRefs();
-console.log(refs.cards);
+console.log(refs.searchForm);
 
-refs.input.addEventListener('input', debounce(onSearch, 500));
+const newsApiService = new NewsApiService();
 
-let searchQuery = '';
+refs.searchForm.addEventListener('submit', onSearch);
+
 
 function onSearch(e) {
-  searchQuery = e.target.value.trim();
-  console.log(searchQuery)
-  refs.cards.innerHTML = '';
-  if (!searchQuery) {
-    return;
-  } else {
-    API.fetchCountry(searchQuery)
-      .then(specificNameNotification)
-      .catch(onFetchError);
+  e.preventDefault();
+   
+  newsApiService.query = e.currentTarget.elements.query.value;
+  console.log(newsApiService.query);
+  if (newsApiService.query === '') {
+    return alert('Введіть запит!');
   }
+  newsApiService.resetPage();
+  clearArticlesGallery();
+  newsApiService.fetchArticles().then(appendArticlesMarkup);
+ newsApiService.incrementPage();
+  }
+
+function appendArticlesMarkup(hits) {
+  refs.gallery.insertAdjacentHTML('beforeend', cardsName(hits));
+}
+function clearArticlesGallery() {
+  refs.gallery.innerHTML = '';
 }
 
-function renderCountryCard(countres) {
-  const murkup = cardsName(countres);
-    console.log(murkup);
-  refs.cards.insertAdjacentHTML('beforeend', murkup);
-}
-function renderCountryList(countres) {
-  const murkupList = cardsList(countres);
-  refs.cards.insertAdjacentHTML('beforeend', murkupList);
-  }
- 
-function onFetchError(error) {
-  
-  alert('Трабли, такої країни не має...');
-}
-function specificNameNotification(countres) {
-  if (countres.length > 10) {
-     error({
-      text: 'Too many matches found. Please enter a more specific query!',
-     });
-    return;
-  }
-  if (countres.length >= 2 && countres.length <= 10) {
-    renderCountryList(countres);
-    return;
-  }
-  renderCountryCard(countres);
-}
+const onEntry = entries => {
+  entries.forEach(entry => {
+    const hasQuery = newsApiService.query !== '';
+    const isNextRequest = newsApiService.page > 1;
+    if (entry.isIntersecting && hasQuery && isNextRequest) {
+      console.log('Треба довантажити ще картинки');
+      newsApiService.fetchArticles().then(appendArticlesMarkup);
+      newsApiService.incrementPage();
+    }
+  });
+};
 
+const options = {
+  rootMargin: '200px',
+};
 
+const observer = new IntersectionObserver(onEntry, options);
+observer.observe(refs.myElementSelector);
